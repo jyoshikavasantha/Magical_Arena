@@ -1,0 +1,67 @@
+import java.util.Random;
+
+class Player {
+    String name;
+    int health;
+    int strength;
+    int attack;
+    
+    public Player(String name, int health, int strength, int attack) {
+        this.name = name;
+        this.health = health;
+        this.strength = strength;
+        this.attack = attack;
+    }
+}
+
+public class MagicalArena {
+    private static Random random = new Random();
+    
+    // Method to simulate a dice roll (1 to 6)
+    public static int rollDie() {
+        return random.nextInt(6) + 1;
+    }
+    
+    // Method to orchestrate the fight between two players
+    public static Player fight(Player player1, Player player2) {
+        Player attacker, defender;
+        
+        // Determine who starts attacking based on health
+        if (player1.health < player2.health) {
+            attacker = player1;
+            defender = player2;
+        } else {
+            attacker = player2;
+            defender = player1;
+        }
+        
+        while (player1.health > 0 && player2.health > 0) {
+            int attackRoll = rollDie();
+            int defenseRoll = rollDie();
+            
+            int attackDamage = attacker.attack * attackRoll;
+            int defenseValue = defender.strength * defenseRoll;
+            
+            int damageDealt = Math.max(0, attackDamage - defenseValue);
+            defender.health -= damageDealt;
+            
+            // Swap roles for the next turn
+            Player temp = attacker;
+            attacker = defender;
+            defender = temp;
+        }
+        
+        // Return the winner (player with health greater than 0)
+        return player1.health > 0 ? player1 : player2;
+    }
+
+    public static void main(String[] args) {
+        Player playerA = new Player("Player A", 50, 5, 10);
+        Player playerB = new Player("Player B", 100, 10, 5);
+        
+        Player winner = fight(playerA, playerB);
+        
+        System.out.println("Winner is: " + winner.name);
+        System.out.println("Attributes: Health = " + winner.health + ", Strength = " + winner.strength + ", Attack = " + winner.attack);
+    }
+}
