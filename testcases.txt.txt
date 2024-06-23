@@ -1,0 +1,10 @@
+Player A,50,5,10,Player B,100,10,5,Player A wins!
+Player A,70,7,8,Player B,60,6,10,Player B wins!
+Player A,80,6,12,Player B,80,8,9,Player A wins!
+Player A,100,10,10,Player B,120,12,8,Player A wins!
+Player A,60,6,15,Player B,70,7,10,Player B wins!
+Player A,90,9,9,Player B,90,9,9,Player A wins!
+Player A,75,8,11,Player B,80,7,12,Player A wins!
+Player A,110,11,7,Player B,100,10,9,Player A wins!
+Player A,85,7,13,Player B,95,9,10,Player B wins!
+Player A,55,5,11,Player B,60,6,10,Player B wins!
