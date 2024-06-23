@@ -1,4 +1,5 @@
-import java.util.Random;
+import java.io.*;
+import java.util.*;
 
 class Player {
     String name;
@@ -17,16 +18,12 @@ class Player {
 public class MagicalArena {
     private static Random random = new Random();
     
-    // Method to simulate a dice roll (1 to 6)
     public static int rollDie() {
         return random.nextInt(6) + 1;
     }
     
-    // Method to orchestrate the fight between two players
     public static Player fight(Player player1, Player player2) {
         Player attacker, defender;
-        
-        // Determine who starts attacking based on health
         if (player1.health < player2.health) {
             attacker = player1;
             defender = player2;
@@ -34,34 +31,57 @@ public class MagicalArena {
             attacker = player2;
             defender = player1;
         }
-        
+
         while (player1.health > 0 && player2.health > 0) {
             int attackRoll = rollDie();
             int defenseRoll = rollDie();
-            
             int attackDamage = attacker.attack * attackRoll;
             int defenseValue = defender.strength * defenseRoll;
-            
             int damageDealt = Math.max(0, attackDamage - defenseValue);
             defender.health -= damageDealt;
-            
-            // Swap roles for the next turn
             Player temp = attacker;
             attacker = defender;
             defender = temp;
         }
-        
-        // Return the winner (player with health greater than 0)
         return player1.health > 0 ? player1 : player2;
     }
 
+    public static List<Player[]> parseTestCasesFromFile(String filename) throws IOException {
+        List<Player[]> testCases = new ArrayList<>();
+        BufferedReader reader = new BufferedReader(new FileReader(filename));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] playerDescriptions = line.split(";");
+            if (playerDescriptions.length == 2) {
+                Player player1 = parsePlayer(playerDescriptions[0]);
+                Player player2 = parsePlayer(playerDescriptions[1]);
+                testCases.add(new Player[] {player1, player2});
+            }
+        }
+        reader.close();
+        return testCases;
+    }
+    
+    public static Player parsePlayer(String description) {
+        String[] attributes = description.split(",");
+        return new Player(attributes[0], Integer.parseInt(attributes[1]),
+                          Integer.parseInt(attributes[2]), Integer.parseInt(attributes[3]));
+    }
+
     public static void main(String[] args) {
-        Player playerA = new Player("Player A", 50, 5, 10);
-        Player playerB = new Player("Player B", 100, 10, 5);
-        
-        Player winner = fight(playerA, playerB);
-        
-        System.out.println("Winner is: " + winner.name);
-        System.out.println("Attributes: Health = " + winner.health + ", Strength = " + winner.strength + ", Attack = " + winner.attack);
+        try {
+            List<Player[]> testCases = parseTestCasesFromFile("test_cases.txt");
+            for (Player[] testCase : testCases) {
+                Player winner = fight(testCase[0], testCase[1]);
+                System.out.println("Winner is: " + winner.name);
+                System.out.println("Attributes: Health = " + winner.health + ", Strength = " + winner.strength + ", Attack = " + winner.attack);
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading test cases: " + e.getMessage());
+        }
     }
 }
+
+       
+            
+   
